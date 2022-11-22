@@ -24,3 +24,6 @@ notification
 multiple type of password storage
 
 .env.example for hardhat and nextjs
+
+feature
+supportedChains
