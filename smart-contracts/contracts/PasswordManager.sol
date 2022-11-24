@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract PasswordManager is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+    Counters.Counter public tokenIdCounter;
 
     mapping(address => uint256) public ownerToToken;
     mapping(address => string) private _ownerToStreamId;
@@ -33,7 +33,9 @@ contract PasswordManager is ERC721, ERC721URIStorage, Ownable {
         _;
     }
 
-    constructor() ERC721("PaswordManagerAccessToken", "PMAK") {}
+    constructor() ERC721("PaswordManagerAccessToken", "PMAK") {
+        tokenIdCounter.increment();
+    }
 
     function getStreamId() external view returns (string memory) {
         return _ownerToStreamId[msg.sender];
@@ -61,8 +63,8 @@ contract PasswordManager is ERC721, ERC721URIStorage, Ownable {
     }
 
     function safeSingleMint(string memory uri) public singleMintCheck {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = tokenIdCounter.current();
+        tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId, uri);
         ownerToToken[msg.sender] = tokenId;

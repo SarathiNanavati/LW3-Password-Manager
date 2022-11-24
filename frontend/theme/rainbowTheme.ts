@@ -11,6 +11,5 @@ const CustomRainbowTheme: Theme = merge(darkTheme(), {
     body: '"Syne","Roboto", "Helvetica", "Arial", sans-serif',
   },
 } as Theme);
-console.log(CustomRainbowTheme);
 
 export default CustomRainbowTheme;

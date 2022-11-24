@@ -4,9 +4,11 @@
 
 NFT generator IPFS
 and metadata
-
+typed text on welcome page
 project demo url :
-flow diagram
+flow diagram  
+ Sign in Process
+Password addtion process
 
 tech stack
 
@@ -27,3 +29,5 @@ multiple type of password storage
 
 feature
 supportedChains
+
+opensea testnet image to be shared

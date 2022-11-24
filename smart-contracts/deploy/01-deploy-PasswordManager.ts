@@ -2,7 +2,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { developmentChains, networkConfig } from "../helper-hardhat-config";
-import { verify } from "../utils/verify";
+import { sleep, verify } from "../utils/verify";
 
 require("dotenv").config();
 
@@ -28,6 +28,9 @@ const deployFn: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   console.log(
     `Deployed .....\nTxn(${passwordManagerNFT.transactionHash})\nContract Address(${passwordManagerNFT.address}) `
   );
+
+  console.log("Sleeping 60 Seconds.....");
+  await sleep(60000);
 
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
     console.log("Verifying ..... ");

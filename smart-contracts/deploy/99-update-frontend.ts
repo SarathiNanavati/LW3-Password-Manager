@@ -12,7 +12,13 @@ const FRONTEND_ADDRESSES_FILE: string = path.join(
   process.env.FRONTEND_ADDRESSES_FILE || ""
 );
 const FRONTEND_ABI_LOCATION: string = path.join(__dirname, process.env.FRONTEND_ABI_LOCATION || "");
+const FRONTEND_CONTRACT_TYPE_LOCATION: string = path.join(
+  __dirname,
+  process.env.FRONTEND_CONTRACT_TYPE_LOCATION || ""
+);
 const SHOULD_UPDATE_FRONTEND = process.env.SHOULD_UPDATE_FRONTEND || false;
+
+const typeScriptDir: string = path.join(__dirname, "../typechain-types/contracts" || "");
 const contractName = "PasswordManager";
 
 const updateFrontEndDetails: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
@@ -21,6 +27,7 @@ const updateFrontEndDetails: DeployFunction = async (hre: HardhatRuntimeEnvironm
     console.log("Updating frontend...");
     await updateContractAddresses(ethers, network);
     await updateAbi(ethers, network);
+    await copyTypes();
   }
 };
 
@@ -41,13 +48,20 @@ const updateContractAddresses = async (ethers: any, network: Network) => {
   console.log(`Reading file ${FRONTEND_ADDRESSES_FILE}`);
   let currentAddresses = JSON.parse(fs.readFileSync(FRONTEND_ADDRESSES_FILE, { encoding: "utf8" }));
 
-  //   if (chainId in currentAddresses) {
-  //     if (!currentAddresses[chainId][contractName].includes(passwordManager.address)) {
-  //       currentAddresses[chainId][contractName].push(passwordManager.address);
-  //     }
-  //   } else {
-  currentAddresses[chainId] = { [contractName]: passwordManager.address };
-  //   }
+  if (!currentAddresses[contractName]) {
+    currentAddresses = { [contractName]: {} };
+  }
+  if (chainId in currentAddresses[contractName]) {
+    currentAddresses[contractName][chainId] = passwordManager.address;
+    // if (!currentAddresses[contractName][chainId].includes(passwordManager.address)) {
+    //   currentAddresses[chainId][contractName].push(passwordManager.address);
+    // }
+  } else {
+    currentAddresses[contractName] = {
+      ...currentAddresses[contractName],
+      [chainId]: passwordManager.address,
+    };
+  }
   fs.writeFileSync(FRONTEND_ADDRESSES_FILE, JSON.stringify(currentAddresses));
 
   console.log("Contract Address file created ");
@@ -69,6 +83,14 @@ const updateAbi = async (ethers: any, network: Network) => {
 
   fs.writeFileSync(filePath, passwordManager.interface.format(FormatTypes.json).toString());
   console.log("Contract ABI file created");
+};
+
+const copyTypes = () => {
+  const fromFilePath = path.join(typeScriptDir, `${contractName}.ts`);
+  const toFilePath = path.join(FRONTEND_CONTRACT_TYPE_LOCATION, `${contractName}.ts`);
+  ensureDirectoryExistence(toFilePath);
+  fs.copyFileSync(fromFilePath, toFilePath);
+  console.log("File Copied");
 };
 
 const ensureDirectoryExistence = (filePath: string) => {
