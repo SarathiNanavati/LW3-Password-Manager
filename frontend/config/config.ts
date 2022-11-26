@@ -4,12 +4,14 @@ const dataJson = JSON.parse(JSON.stringify(data));
 
 export enum APIKEYNAME {
   POLYGONMUMBAI_ALCHEMY_API_KEY = "POLYGONMUMBAI_ALCHEMY_API_KEY",
+  PINATA_API_KEY = "PINATA_API_KEY",
+  PINATA_API_SECRET = "PINATA_API_SECRET",
 }
 
 export const config: ConfigMapping = {
   application: {
     name: "LW3 Lit Password Manager",
-    supportedChains: [chain.polygonMumbai],
+    supportedChains: [chain.goerli],
     passwordManagerContractName: "PasswordManager",
     defaultBlockConfirmations: 2,
     snakeBarAutoHideDuration: 5000,

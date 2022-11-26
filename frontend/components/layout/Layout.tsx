@@ -27,7 +27,7 @@ const Layout = (props: React.ComponentPropsWithoutRef<"p">) => {
         {props.children}
       </Container>
 
-      <Snackbar {...snackBarProps} onClose={handleClose} onDurationChange={(args) => console.log}>
+      <Snackbar {...snackBarProps} onClose={handleClose}>
         <SnackbarAlert onClose={handleClose} severity={snackBarState.severity}>
           {snackBarState.message}
         </SnackbarAlert>

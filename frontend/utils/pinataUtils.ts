@@ -1,12 +1,12 @@
-import { config } from "../config/config";
+import { APIKEYNAME, config } from "../config/config";
 import * as fs from "fs";
 import axios, { AxiosResponse } from "axios";
 import FormData from "form-data";
 import { NFTMetaDataType } from "./utils";
 
 const pinataCloudPinningBaseURL = `https://api.pinata.cloud/pinning/`;
-const pinataKey = config.client["PINATA_API_KEY"];
-const pinataSecret = config.client["PINATA_API_SECRET"];
+const pinataKey = config.client[APIKEYNAME.PINATA_API_KEY];
+const pinataSecret = config.client[APIKEYNAME.PINATA_API_SECRET];
 
 const metadata = {
   name: "",
@@ -32,7 +32,7 @@ const pinataApiCall = async (data: FormData | string): Promise<AxiosResponse | n
 
     return res;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };
@@ -63,18 +63,13 @@ export const pinMetaDataToIPFS = async (
   fileName: string
 ): Promise<{ ipfsHashUrl: string; status: boolean }> => {
   metadata.name = fileName;
-  console.log({
-    pinataOptions: options,
-    pinataMetadata: metadata,
-    file: nftMetadata,
-  });
+
   const data = JSON.stringify({
     pinataOptions: options,
     pinataMetadata: metadata,
     pinataContent: nftMetadata,
   });
 
-  console.log("asdfasdfasdf", data, JSON.parse(data));
   const res = await pinataApiCall(data);
 
   if (res) {

@@ -3,17 +3,20 @@ import { useState, useEffect } from "react";
 import Welcome from "../components/welcomePage/Welcome";
 import SignUp from "../components/signUpPage/SignUp";
 import SignedIn from "../components/signedInPage/SignedIn";
-import { useAccount, useContract, useSigner } from "wagmi";
-import { config, NetworkConfig } from "../config/config";
+import { useAccount, useContract, useEnsAvatar, useEnsName, useSigner } from "wagmi";
+import { config } from "../config/config";
 import abi from "../constants/abis/PasswordManager.json";
-import { getTokenCounter, GetTokenId, getTokenId, setContract } from "../utils/ethersUtils";
+import { getTokenCounter, getTokenId } from "../utils/ethersUtils";
 import { PasswordManager } from "../constants/types/PasswordManager";
 import {
-  updateAddress,
+  updateUserAddress,
   updateContract,
   updateSigner,
   updateTokenCounter,
-  updateTokenId,
+  updateUserTokenId,
+  updateUserEnsName,
+  updateUserEnsAvatarUrl,
+  resetUser,
 } from "../features/userSlice";
 import { useAppDispatch } from "../store/store";
 import { Signer } from "ethers";
@@ -42,6 +45,8 @@ const Home: NextPage = () => {
   const dispatch = useAppDispatch();
   const { address, isConnected } = useAccount();
   const { data: signer } = useSigner();
+  const { data: ensName } = useEnsName({ address });
+  const { data: ensAvatar } = useEnsAvatar({ address });
   const contract = useContract({
     address: networks[contractName][chainId],
     abi,
@@ -50,25 +55,33 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const func = async () => {
+      dispatch(resetUser());
       dispatch(updateContract({ contract }));
       dispatch(updateSigner({ signer: (signer as Signer)! }));
-      dispatch(updateAddress({ address: address! }));
+      dispatch(updateUserAddress({ address: address! }));
       const tokenId = await getTokenId(contract as PasswordManager, address!);
-      dispatch(updateTokenId({ tokenId }));
+      dispatch(updateUserTokenId({ tokenId }));
       const tokenCounter = await getTokenCounter(contract as PasswordManager);
       dispatch(updateTokenCounter({ counter: tokenCounter }));
       setTokenId(tokenId);
+
+      if (ensName) {
+        dispatch(updateUserEnsName({ ensName }));
+      }
+      if (ensAvatar) {
+        dispatch(updateUserEnsAvatarUrl({ ensAvatarUrl: ensAvatar! }));
+      }
     };
     if (signer) {
       func();
     }
-  }, [signer, address]);
+  }, [signer, address, ensName, ensAvatar]);
 
   useEffect(() => {
     if (isConnected && tokenId !== 0) setPageState(UserStatus.SIGNED_IN);
     else if (isConnected && tokenId === 0) setPageState(UserStatus.CONNECTED);
     else setPageState(UserStatus.WELCOME);
-  }, [tokenId, isConnected]);
+  }, [tokenId, isConnected, address]);
 
   return (
     <>

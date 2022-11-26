@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Signer } from "ethers";
-import { Address } from "wagmi";
-import { PasswordManager } from "../constants/types/PasswordManager";
 import type { RootState } from "../store/store";
-import { AlertColor, SnackbarProps } from "@mui/material";
+import { AlertColor } from "@mui/material";
 import { config } from "../config/config";
 
 interface SnackBarState {
