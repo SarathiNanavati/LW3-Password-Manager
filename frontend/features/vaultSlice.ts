@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import { AlertColor } from "@mui/material";
 import { config } from "../config/config";
+import _ from "lodash";
 
 export enum RecordType {
   WEBSITE = "WEBSITE",
@@ -47,79 +48,8 @@ export type DocumentType = {
 const initialState: VaultStateType = {
   vaults: [
     {
-      vaultName: "Personal Bank Vault",
-      selectedRecordIndex: 0,
-      records: [
-        {
-          recordName: "facebook",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "facebook",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-        {
-          recordName: "gmail",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "gmail",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-        {
-          recordName: "twitter",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "twitter",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-        {
-          recordName: "discord",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "discord",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-      ],
-    },
-    {
-      vaultName: "Document Vault",
-      selectedRecordIndex: 0,
-      records: [
-        {
-          recordName: "gmail",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "gmail",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-        {
-          recordName: "twitter",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "twitter",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-        {
-          recordName: "discord",
-          recordType: RecordType.WEBSITE,
-          recordAttributes: {
-            domaninNameOrUrl: "discord",
-            userNameOrEmail: "abcdefghijklmno",
-            passwordOrSecret: "asdfasdfadfadsf",
-          },
-        },
-      ],
+      vaultName: "Personal Vault",
+      records: [],
     },
   ],
   selectedVaultIndex: 0,
@@ -129,6 +59,10 @@ const vaultsSlice = createSlice({
   name: "vault",
   initialState,
   reducers: {
+    updateVaultsState(state, action: PayloadAction<{ vaultsState: VaultStateType }>) {
+      state.vaults = action.payload.vaultsState.vaults;
+      state.selectedVaultIndex = action.payload.vaultsState.selectedVaultIndex;
+    },
     addNewVault(state, action: PayloadAction<{ vaultName: string }>) {
       state.vaults.push({ vaultName: action.payload.vaultName, records: [] });
     },
@@ -215,6 +149,7 @@ export const {
   updateRecordSelectedIndex,
   updateRecordAttribute,
   updateRecordName,
+  updateVaultsState,
 } = vaultsSlice.actions;
 
 export const getVaultsState = (state: RootState) => state.vault;

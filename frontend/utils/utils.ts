@@ -41,3 +41,29 @@ export const dataURLtoFile = (dataurl: string, filename: string): File => {
 export const sleepInMilliSeconds = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
+export const blobToDataURI = async (blob: Blob) => {
+  return new Promise((resolve, reject) => {
+    var reader = new FileReader();
+
+    reader.onload = (e) => {
+      var data = e.target.result;
+      resolve(data);
+    };
+    reader.readAsDataURL(blob);
+  });
+};
+
+export const dataURItoBlob = (dataURI: string): Blob => {
+  var byteString = window.atob(dataURI.split(",")[1]);
+  var mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  var blob = new Blob([ab], { type: mimeString });
+
+  return blob;
+};

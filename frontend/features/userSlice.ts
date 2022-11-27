@@ -3,6 +3,7 @@ import { Signer } from "ethers";
 import { Address } from "wagmi";
 import { PasswordManager } from "../constants/types/PasswordManager";
 import type { RootState } from "../store/store";
+import { VaultStateType } from "./vaultSlice";
 
 interface UserState {
   signer?: Signer;
@@ -13,6 +14,7 @@ interface UserState {
   ensName?: string | null;
   ensAvatarUrl?: string | null;
   isVaultUpdated: boolean;
+  oldVaultsState?: VaultStateType;
 }
 const initialState: UserState = {
   tokenId: 0,
@@ -60,6 +62,10 @@ const userSlice = createSlice({
       ...state,
       isVaultUpdated: action.payload.vaultStatus,
     }),
+    updateUserOldVaultsState: (state, action: PayloadAction<{ vaultsState: VaultStateType }>) => ({
+      ...state,
+      oldVaultsState: action.payload.vaultsState,
+    }),
   },
 });
 
@@ -73,6 +79,7 @@ export const {
   updateUserEnsName,
   updateUserEnsAvatarUrl,
   updateUserVaultUpdatedStatus,
+  updateUserOldVaultsState,
 } = userSlice.actions;
 
 export const getUserState = (state: RootState) => state.user;

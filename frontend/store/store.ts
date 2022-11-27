@@ -1,7 +1,7 @@
 import { isEqual } from "lodash";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer, { updateUserVaultUpdatedStatus } from "../features/userSlice";
-import snackBarReducer from "../features/snackBarSlice";
+// import snackBarReducer from "../features/snackBarSlice";
 import vaultSlice from "../features/vaultSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
@@ -12,19 +12,18 @@ export const store = configureStore({
     }),
   reducer: {
     user: userReducer,
-    snackBar: snackBarReducer,
+    // snackBar: snackBarReducer,
     vault: vaultSlice,
   },
   devTools: true,
 });
 
-const oldVaultsState = store.getState().vault;
 const next = store.dispatch;
 store.dispatch = function dispatchAndLog(action) {
-  console.log("dispatching", action);
+  // console.log("dispatching", action);
   let result = next(action);
-  console.log("next state", store.getState());
-  const res = isEqual(oldVaultsState, store.getState().vault);
+  // console.log("next state", store.getState());
+  const res = isEqual(store.getState().user.oldVaultsState, store.getState().vault);
   next(updateUserVaultUpdatedStatus({ vaultStatus: !res }));
   return result;
 };

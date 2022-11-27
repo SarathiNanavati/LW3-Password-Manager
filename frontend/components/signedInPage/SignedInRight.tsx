@@ -1,4 +1,13 @@
-import { Stack, Box, Typography, Button, List, ListItem, IconButton } from "@mui/material";
+import {
+  Stack,
+  Box,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
 import {
   Edit as EditIcon,
   Visibility as VisibilityIcon,
@@ -10,18 +19,37 @@ import {
   getSelectedRecordIndex,
   getSelectedVaultIndex,
   getSelectedVaultRecord,
+  getVaultsState,
   RecordType,
   updateRecordAttribute,
   WebsiteType,
 } from "../../features/vaultSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomModal from "../layout/CustomModal";
 import SingleUpdateInputFieldForm from "../forms/SingleUpdateInputFieldForm";
-import { getUserState } from "../../features/userSlice";
+import {
+  getUserState,
+  updateUserOldVaultsState,
+  updateUserOldVaultState,
+  updateUserVaultUpdatedStatus,
+} from "../../features/userSlice";
+import { decryptString, encryptString, getAccessControlConditions } from "../../utils/litUtils";
+import { config } from "../../config/config";
+import Snack from "../layout/Snack";
+import {
+  authenticateCeramicClient,
+  CeramicStoreObjectType,
+  createDocument,
+  loadData,
+  updateDocument,
+} from "../../utils/ceramicUtils";
+import { getStreamId, setStream } from "../../utils/ethersUtils";
+import Router from "next/router";
 
 const SignedInRight = () => {
   const userState = useAppSelector(getUserState);
+  const vaultsState = useAppSelector(getVaultsState);
   const dispatch = useAppDispatch();
   const recordState = useAppSelector(getSelectedVaultRecord);
   const [visible, setVisible] = useState(false);
@@ -30,6 +58,19 @@ const SignedInRight = () => {
   const [dataKeyDisplay, setDataKeyDisplay] = useState("");
   const [dataValue, setDataValue] = useState("");
   const [modalTitle, setModalTitle] = useState("");
+  const [showSavingSpinner, setShowSavingSpinner] = useState(false);
+
+  const chain = config.application.supportedChains[0].network;
+
+  // useEffect(() => {
+  //   authenticateCeramicClient(userState.address!.toString());
+  // }, [userState.address]);
+
+  // Snack.success("Success");
+  // Snack.info("Information");
+  // Snack.warning("Warning");
+  // Snack.error("Error");
+  // Snack.toast("Toast");
 
   const recordAttributes =
     recordState?.recordType === RecordType.WEBSITE
@@ -54,6 +95,55 @@ const SignedInRight = () => {
     setDataValue(value);
     setModalTitle(`Update ${keyDisplayName}`);
     setOpenModal(true);
+  };
+
+  const handleSaveChangesOnChain = async (): Promise<void> => {
+    Snack.warning("Please wait While you data is being saved");
+    setShowSavingSpinner(true);
+
+    try {
+      const accessControl = getAccessControlConditions(userState.tokenId, userState.address);
+      const { status, encryptedString, encryptedSymmetricKey } = await encryptString(
+        JSON.stringify(vaultsState),
+        accessControl,
+        chain
+      );
+      if (status) {
+        Snack.warning("Saving Encrypted Data on Ceramic");
+        const dataToBeSaved: CeramicStoreObjectType = {
+          accessControlConditions: accessControl,
+          accessControlConditionType: "accessControlConditions",
+          chain,
+          encryptedString,
+          encryptedSymmetricKey,
+        };
+
+        const streamId = await getStreamId(userState.contract);
+        let newStreamId: string;
+        if (streamId === "") {
+          newStreamId = await createDocument(dataToBeSaved);
+        } else {
+          newStreamId = await updateDocument(streamId, dataToBeSaved);
+        }
+        console.log("newStreamId", newStreamId);
+        try {
+          if (streamId !== newStreamId) {
+            Snack.warning("Updating Details On Chain");
+            if (!(await setStream(userState.contract, userState.tokenId, newStreamId))) {
+              throw new Error("Error");
+            }
+          }
+          dispatch(updateUserVaultUpdatedStatus({ vaultStatus: false }));
+          dispatch(updateUserOldVaultsState({ vaultsState: vaultsState }));
+          Snack.success("Data Save On Chain Successfully. Page will be reloaded in 5 second");
+        } catch (error) {
+          throw error;
+        }
+      }
+    } catch (error) {
+      Snack.error("Failed to Save Data");
+    }
+    setShowSavingSpinner(false);
   };
 
   return (
@@ -233,17 +323,35 @@ const SignedInRight = () => {
               marginTop: "10px",
               alignItems: "center",
             }}>
-            <Button
-              variant='contained'
-              color='primary'
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}>
-              <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
-                Save/Update All Changes at Once
-              </Typography>
-            </Button>
+            {showSavingSpinner ? (
+              <>
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}>
+                  <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
+                    Please Wait. We are saving your data.
+                  </Typography>
+                  <CircularProgress />
+                </Box>
+              </>
+            ) : (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={(e) => handleSaveChangesOnChain()}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                }}>
+                <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
+                  Save / Update All Changes at Once
+                </Typography>
+              </Button>
+            )}
           </Box>
         )}
       </Stack>

@@ -67,7 +67,6 @@ const CreateVaultRecodForm = (props: CreateVaultRecodFormProps) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     let validationFailedFlag = false;
-    console.log(recordData);
     setRecordDataError({
       recordName: false,
       domaninNameOrUrl: false,

@@ -27,7 +27,6 @@ const SingleUpdateInputFieldForm = (props: SingleUpdateInputFieldFormProps) => {
     for (let i = 1; i <= 16; i++) {
       password += str.charAt(Math.floor(Math.random() * str.length + 1));
     }
-    console.log("asdfasdfasdf", password);
     setText(password);
   };
   const handleFormUpdate = (e: any) => {

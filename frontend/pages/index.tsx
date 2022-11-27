@@ -20,8 +20,7 @@ import {
 } from "../features/userSlice";
 import { useAppDispatch } from "../store/store";
 import { Signer } from "ethers";
-
-console.log("config", config);
+import Router from "next/router";
 
 const { application, networks } = config;
 const chainId = application.supportedChains[0].id;

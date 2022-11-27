@@ -1,19 +1,18 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import { config, APIKEYNAME } from "../config/config";
-import { Provider as ReduxStoreProvider } from "react-redux";
-import { store } from "../store/store";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import type { AppProps } from "next/app";
-import { ThemeProvider } from "@mui/material";
-import Head from "next/head";
-
-import { theme } from "../theme/theme";
 import CustomRainbowTheme from "../theme/rainbowTheme";
+import Head from "next/head";
 import Layout from "../components/layout/Layout";
+import type { AppProps } from "next/app";
+import { Provider as ReduxStoreProvider } from "react-redux";
+import { ThemeProvider } from "@mui/material";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { config, APIKEYNAME } from "../config/config";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { publicProvider } from "wagmi/providers/public";
+import { store } from "../store/store";
+import { theme } from "../theme/theme";
 
 ///////////////////////Wagmi Configuration///////////////////////////////////////////////
 //chains
@@ -35,6 +34,16 @@ const wagmiClient = createClient({
   provider,
 });
 
+// return (
+//   <SnackbarProvider
+//     //not working
+//     classes={{
+//       variantError: styles.error,
+//     }}>
+//     <CustomStack />
+//   </SnackbarProvider>
+// );
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -43,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name='description' content='One Place to store and manage your password' />
         <link rel='icon' href='/assets/icon.png' />
       </Head>
+
       <ReduxStoreProvider store={store}>
         <ThemeProvider theme={theme}>
           <WagmiConfig client={wagmiClient}>

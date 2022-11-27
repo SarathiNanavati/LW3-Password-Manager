@@ -51,7 +51,6 @@ export const pinFileToIPFS = async (
   const res = await pinataApiCall(formData);
 
   if (res) {
-    console.log(res.data);
     return { ipfsHashUrl: `ipfs://${res.data.IpfsHash}`, status: true };
   } else {
     return { ipfsHashUrl: "", status: false };
@@ -73,7 +72,6 @@ export const pinMetaDataToIPFS = async (
   const res = await pinataApiCall(data);
 
   if (res) {
-    console.log(res.data);
     return { ipfsHashUrl: `ipfs://${res.data.IpfsHash}`, status: true };
   } else {
     return { ipfsHashUrl: "", status: false };
