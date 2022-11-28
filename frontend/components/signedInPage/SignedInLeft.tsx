@@ -133,8 +133,12 @@ const SignedInLeft = (props: SignedInLeftProps) => {
                 <></>
               )}
             </Typography>
-            <Typography gutterBottom variant='h5' component='div' sx={{ paddingX: "40px" }}>
-              {config.application.supportedChains[0].name}
+            <Typography
+              gutterBottom
+              variant='h4'
+              component='div'
+              sx={{ paddingX: "40px", fontSize: "140%" }}>
+              {config.application.supportedChains[0].name.toUpperCase()}
             </Typography>
           </Box>
         </Box>

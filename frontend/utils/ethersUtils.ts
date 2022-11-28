@@ -36,7 +36,7 @@ export const mintNFTAccessToken = async (
   }
 };
 
-export const getStreamId = async (contract: PasswordManager): Promise<string> => {
+export const getUserStreamId = async (contract: PasswordManager): Promise<string> => {
   try {
     const streamId = await contract.getStreamId();
     return streamId;

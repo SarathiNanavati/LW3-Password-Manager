@@ -24,7 +24,7 @@ export type VaultItemType = {
 export type RecordItemType = {
   recordName: string;
   recordType: RecordType;
-  recordAttributes: WebsiteType | CreditCardType | DocumentType;
+  recordAttributes: WebsiteType; // | CreditCardType | DocumentType
 };
 
 export type WebsiteType = {

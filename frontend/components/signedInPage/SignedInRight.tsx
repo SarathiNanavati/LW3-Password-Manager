@@ -31,7 +31,6 @@ import SingleUpdateInputFieldForm from "../forms/SingleUpdateInputFieldForm";
 import {
   getUserState,
   updateUserOldVaultsState,
-  updateUserOldVaultState,
   updateUserVaultUpdatedStatus,
 } from "../../features/userSlice";
 import { decryptString, encryptString, getAccessControlConditions } from "../../utils/litUtils";
@@ -41,11 +40,11 @@ import {
   authenticateCeramicClient,
   CeramicStoreObjectType,
   createDocument,
-  loadData,
   updateDocument,
 } from "../../utils/ceramicUtils";
-import { getStreamId, setStream } from "../../utils/ethersUtils";
+import { getUserStreamId, setStream } from "../../utils/ethersUtils";
 import Router from "next/router";
+import TypedMessage from "../ui/TypedMessage";
 
 const SignedInRight = () => {
   const userState = useAppSelector(getUserState);
@@ -62,9 +61,9 @@ const SignedInRight = () => {
 
   const chain = config.application.supportedChains[0].network;
 
-  // useEffect(() => {
-  //   authenticateCeramicClient(userState.address!.toString());
-  // }, [userState.address]);
+  useEffect(() => {
+    authenticateCeramicClient(userState.address!.toString());
+  }, [userState.address]);
 
   // Snack.success("Success");
   // Snack.info("Information");
@@ -118,14 +117,14 @@ const SignedInRight = () => {
           encryptedSymmetricKey,
         };
 
-        const streamId = await getStreamId(userState.contract);
+        const streamId = await getUserStreamId(userState.contract);
+
         let newStreamId: string;
         if (streamId === "") {
           newStreamId = await createDocument(dataToBeSaved);
         } else {
           newStreamId = await updateDocument(streamId, dataToBeSaved);
         }
-        console.log("newStreamId", newStreamId);
         try {
           if (streamId !== newStreamId) {
             Snack.warning("Updating Details On Chain");
@@ -141,6 +140,7 @@ const SignedInRight = () => {
         }
       }
     } catch (error) {
+      console.error(error);
       Snack.error("Failed to Save Data");
     }
     setShowSavingSpinner(false);
@@ -333,7 +333,7 @@ const SignedInRight = () => {
                     justifyContent: "center",
                   }}>
                   <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
-                    Please Wait. We are saving your data.
+                    <TypedMessage titles={["Please Wait. We are saving your data."]} />
                   </Typography>
                   <CircularProgress />
                 </Box>
@@ -348,7 +348,7 @@ const SignedInRight = () => {
                   height: "100%",
                 }}>
                 <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
-                  Save / Update All Changes at Once
+                  <TypedMessage titles={["Save / Update All Changes at Once"]} />
                 </Typography>
               </Button>
             )}

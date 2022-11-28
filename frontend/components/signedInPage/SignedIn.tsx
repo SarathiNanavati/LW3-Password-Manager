@@ -7,9 +7,10 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getUserState, updateUserOldVaultsState } from "../../features/userSlice";
 import { useState, useEffect } from "react";
 import { authenticateCeramicClient, loadDocument } from "../../utils/ceramicUtils";
-import { getStreamId } from "../../utils/ethersUtils";
+import { getUserStreamId } from "../../utils/ethersUtils";
 import { getVaultsState, updateVaultsState } from "../../features/vaultSlice";
 import Snack from "../layout/Snack";
+import TypedMessage from "../ui/TypedMessage";
 
 type SignedInProps = {};
 
@@ -25,7 +26,7 @@ const SignedIn = (props: SignedInProps) => {
   useEffect(() => {
     const callFn = async () => {
       try {
-        const streamId = await getStreamId(userState.contract);
+        const streamId = await getUserStreamId(userState.contract);
         if (streamId === "") {
           dispatch(updateUserOldVaultsState({ vaultsState }));
         } else {
@@ -80,9 +81,9 @@ const SignedIn = (props: SignedInProps) => {
               variant='h4'
               component='div'
               sx={{ fontSize: "140%", textAlign: "center" }}>
-              Please be patient. We are loading your Vault Information
+              <TypedMessage titles={["Please be patient. We are loading your Vault Information"]} />
             </Typography>
-          )}{" "}
+          )}
         </CardContent>
       </Card>
     </>

@@ -61,8 +61,6 @@ export const decryptString = async (
   accessControlConditions: any,
   chain: string
 ) => {
-  console.log(encryptedSymmetricKey, accessControlConditions);
-
   await connectToLitNetwork();
 
   try {
