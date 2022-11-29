@@ -15,9 +15,28 @@
 ## Project Flows and Supporting Screenshots
 
 - Home Page
+  ![image](https://user-images.githubusercontent.com/56193257/204447597-e682c8c2-9c6a-4a87-af44-30ebd8100c50.png)
+
 - Sign-Up Page
-  asdf
+  1. Mint a Non-Transferable NFT to get access to Password Vault Application
+  ![image](https://user-images.githubusercontent.com/56193257/204448727-21e0337e-5458-42a7-8cec-c1173087a8d7.png)
+  2.  NFT details available on Opensea
+  ![image](https://user-images.githubusercontent.com/56193257/204449234-85353333-9245-4fb2-a706-0408f89692b0.png)
+
 - Logged-In Page
+  1. Once Logged-in, User will see below page which has 1 default Vault. 
+  ![image](https://user-images.githubusercontent.com/56193257/204449718-12d62a9b-d0ef-4fc3-b335-b00e563a8980.png)
+
+  2. Logged-in User can create multiple Vaults,for example Social Media Vault, Bank Accounts Vault, Credit Cards Vault to segregate password as per will.
+  ![image](https://user-images.githubusercontent.com/56193257/204450930-0ac842b1-8edd-4586-b63a-2f0bc9454f25.png)
+
+  3. ENS Name and ENS Avatar of user is also displayed, if exists.
+  ![image](https://user-images.githubusercontent.com/56193257/204451250-2f20cde4-afa0-44fa-b830-e846147ccddc.png)
+
+  4. Auto Generation of Password
+  ![image](https://user-images.githubusercontent.com/56193257/204451778-66618ccf-0f4c-49bf-b086-67d84998e529.png)
+
+
 
 opensea testnet image to be shared
 
