@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { config } from "../config/config";
-import { PasswordManager } from "../constants/types/PasswordManager";
+import { PasswordManager } from "../constants/types/contracts/PasswordManager";
 
 export const getTokenId = async (contract: PasswordManager, address: string): Promise<number> => {
   try {

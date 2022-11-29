@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Signer } from "ethers";
-import { Address } from "wagmi";
-import { PasswordManager } from "../constants/types/PasswordManager";
+import { Address, Chain } from "wagmi";
+import { PasswordManager } from "../constants/types/contracts/PasswordManager";
 import type { RootState } from "../store/store";
 import { VaultStateType } from "./vaultSlice";
 
@@ -10,6 +10,7 @@ interface UserState {
   tokenId: number;
   tokenCounter: number;
   address?: Address;
+  chain?: Chain;
   contract?: PasswordManager;
   ensName?: string | null;
   ensAvatarUrl?: string | null;
@@ -46,6 +47,10 @@ const userSlice = createSlice({
       ...state,
       address: action.payload.address,
     }),
+    updateChain: (state, action: PayloadAction<{ chain: Chain }>) => ({
+      ...state,
+      chain: action.payload.chain,
+    }),
     updateSigner: (state, action: PayloadAction<{ signer: Signer }>) => ({
       ...state,
       signer: action.payload.signer,
@@ -80,6 +85,7 @@ export const {
   updateUserEnsAvatarUrl,
   updateUserVaultUpdatedStatus,
   updateUserOldVaultsState,
+  updateChain,
 } = userSlice.actions;
 
 export const getUserState = (state: RootState) => state.user;

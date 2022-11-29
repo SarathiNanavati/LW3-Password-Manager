@@ -76,7 +76,7 @@ const vaultsSlice = createSlice({
       }>
     ) {
       const vaultIndex = state.selectedVaultIndex ?? 0;
-      state.vaults[vaultIndex].records.push({
+      state.vaults[vaultIndex].records!.push({
         recordName: action.payload.recordName,
         recordType: RecordType.WEBSITE,
         recordAttributes: {
@@ -86,13 +86,10 @@ const vaultsSlice = createSlice({
         },
       });
 
-      state.vaults[vaultIndex].selectedRecordIndex = state.vaults[vaultIndex].records?.length - 1;
+      state.vaults[vaultIndex].selectedRecordIndex = state.vaults[vaultIndex].records!?.length - 1;
     },
-    updateVaultName(
-      state,
-      action: PayloadAction<{ index: number | undefined; updatedVaultName: string }>
-    ) {
-      if (action.payload.index)
+    updateVaultName(state, action: PayloadAction<{ index: number; updatedVaultName: string }>) {
+      if (action.payload.index || action.payload.index === 0)
         state.vaults[action.payload.index].vaultName = action.payload.updatedVaultName;
     },
     deleteVaultByIndex(state, action: PayloadAction<{ index: number | null }>) {
@@ -108,8 +105,8 @@ const vaultsSlice = createSlice({
       if (action.payload.index || action.payload.index === 0) {
         const vaultIndex = state.selectedVaultIndex ?? 0;
 
-        if (state.vaults[vaultIndex].records && state.vaults[vaultIndex].records?.length > 0) {
-          state.vaults[vaultIndex].records = state.vaults[vaultIndex].records.filter(
+        if (state.vaults[vaultIndex].records && state.vaults[vaultIndex].records!?.length > 0) {
+          state.vaults[vaultIndex].records = state.vaults[vaultIndex].records!.filter(
             (record, index) => {
               return index !== action.payload.index;
             }
@@ -121,20 +118,22 @@ const vaultsSlice = createSlice({
       state.selectedVaultIndex = action.payload.index;
     },
     updateRecordSelectedIndex(state, action: PayloadAction<{ index: number }>) {
-      state.vaults[state.selectedVaultIndex].selectedRecordIndex = action.payload.index;
+      state.vaults[state.selectedVaultIndex!].selectedRecordIndex = action.payload.index;
     },
     updateRecordAttribute(state, action: PayloadAction<{ key: string; value: string }>) {
       const vaultIndex = state.selectedVaultIndex ?? 0;
       const recordIndex = state.vaults[vaultIndex].selectedRecordIndex ?? 0;
 
-      state.vaults[vaultIndex].records[recordIndex].recordAttributes[action.payload.key] =
-        action.payload.value;
+      state.vaults[vaultIndex].records![recordIndex].recordAttributes = {
+        ...state.vaults[vaultIndex].records![recordIndex].recordAttributes,
+        [action.payload.key]: action.payload.value,
+      };
     },
     updateRecordName(state, action: PayloadAction<{ recordName: string }>) {
       const vaultIndex = state.selectedVaultIndex ?? 0;
       const recordIndex = state.vaults[vaultIndex].selectedRecordIndex ?? 0;
 
-      state.vaults[vaultIndex].records[recordIndex].recordName = action.payload.recordName;
+      state.vaults[vaultIndex].records![recordIndex].recordName = action.payload.recordName;
     },
   },
 });
@@ -153,8 +152,8 @@ export const {
 } = vaultsSlice.actions;
 
 export const getVaultsState = (state: RootState) => state.vault;
-export const getSelectedVaultRecords = (state: RootState) =>
-  state.vault.vaults[state.vault.selectedVaultIndex];
+export const getSelectedVaultRecords = (state: RootState): VaultItemType =>
+  state.vault.vaults[state.vault.selectedVaultIndex!];
 
 export const getSelectedVaultRecord = (state: RootState) => {
   const vaultIndex = state.vault.selectedVaultIndex ?? 0;
@@ -165,7 +164,7 @@ export const getSelectedVaultRecord = (state: RootState) => {
     state.vault.vaults[vaultIndex].records &&
     state.vault.vaults[vaultIndex].records?.length != 0
   )
-    return state.vault.vaults[vaultIndex].records[recordIndex];
+    return state.vault.vaults[vaultIndex].records![recordIndex];
   else {
     return null;
   }

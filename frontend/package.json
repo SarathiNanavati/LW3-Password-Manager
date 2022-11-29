@@ -13,7 +13,6 @@
     "@ceramicnetwork/3id-did-resolver": "^2.6.0",
     "@ceramicnetwork/http-client": "^2.10.0",
     "@ceramicnetwork/stream-tile": "^2.9.0",
-    "@createnextapp/async-local-storage": "^1.0.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@lit-protocol/sdk-browser": "^1.1.235",

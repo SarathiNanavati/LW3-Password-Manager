@@ -24,7 +24,7 @@ import CancelConfirmForm from "../forms/CancelConfirmForm";
 export type SignedInLeftProps = {};
 
 const SignedInLeft = (props: SignedInLeftProps) => {
-  const { address, ensName, ensAvatarUrl } = useAppSelector(getUserState);
+  const { address, ensName, ensAvatarUrl, chain } = useAppSelector(getUserState);
   const maskedAddress = useAppSelector(getMaskedUserAddress);
   const dispatch = useAppDispatch();
   const [disableCopyButton, setDisableCopyButton] = useState(false);
@@ -32,13 +32,14 @@ const SignedInLeft = (props: SignedInLeftProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedVaultIndex, setSelectedVaultIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
-  const [modalFormData, setModalFormData] = useState({});
+  const [editMode, setEditMode] = useState(false);
+  const [itemIndex, setItemIndex] = useState(0);
   const [isAlertModal, setIsAlertModal] = useState(false);
   const vaultState = useAppSelector(getVaultsState);
   const vaultsName = vaultState.vaults.map((vault) => vault.vaultName);
 
   const handleVaultItemClicked = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     selectedIndex: number
   ) => {
     updateVaultSelectedIndexFn(selectedIndex);
@@ -67,19 +68,14 @@ const SignedInLeft = (props: SignedInLeftProps) => {
       setOpenModal(true);
     } else if (mode === "edit") {
       updateVaultSelectedIndexFn(clickedIndex);
-      setModalFormData({
-        editMode: true,
-        itemIndex: clickedIndex,
-        handleModalClose,
-      });
+      setEditMode(true);
+      setItemIndex(clickedIndex);
+
       setModalTitle("Update Vault Name");
       setOpenModal(true);
     } else {
-      setModalFormData({
-        editMode: false,
-        itemIndex: 0,
-        handleModalClose,
-      });
+      setEditMode(false);
+      setItemIndex(0);
       setModalTitle("Create New Vault");
       setOpenModal(true);
     }
@@ -88,7 +84,7 @@ const SignedInLeft = (props: SignedInLeftProps) => {
   const handleCopyButton = async () => {
     setDisableCopyButton(true);
     if ("clipboard" in navigator) {
-      navigator.clipboard.writeText(address.toString());
+      navigator.clipboard.writeText(address!.toString());
     } else {
       document.execCommand("copy", true, address);
     }
@@ -106,7 +102,7 @@ const SignedInLeft = (props: SignedInLeftProps) => {
           sx={{ display: "flex", flexDirection: "row", borderRadius: "10px", height: "80px" }}>
           <Box sx={{ flex: 1 }}>
             <Avatar
-              src={ensAvatarUrl ? ensAvatarUrl : "/icons/128/bitcoin.png"}
+              src={ensAvatarUrl ? ensAvatarUrl : "/icons/128/anonymity.png"}
               sx={{
                 bgcolor: "primary.light",
                 textAlign: "center",
@@ -138,7 +134,7 @@ const SignedInLeft = (props: SignedInLeftProps) => {
               variant='h4'
               component='div'
               sx={{ paddingX: "40px", fontSize: "140%" }}>
-              {config.application.supportedChains[0].name.toUpperCase()}
+              {chain?.network.toUpperCase()}
             </Typography>
           </Box>
         </Box>
@@ -229,7 +225,13 @@ const SignedInLeft = (props: SignedInLeftProps) => {
         </Box>
       </Stack>
       <CustomModal openModal={openModal} title={modalTitle} handleModalClose={handleModalClose}>
-        {!isAlertModal && <CreateVaultForm {...modalFormData} />}
+        {!isAlertModal && (
+          <CreateVaultForm
+            editMode={editMode}
+            itemIndex={itemIndex}
+            handleModalClose={handleModalClose}
+          />
+        )}
         {isAlertModal && (
           <CancelConfirmForm
             message='Once Confirmed, Entire Vault Data Will be deleted from memory. After Saving, changes will be permanent. Are you sure?'

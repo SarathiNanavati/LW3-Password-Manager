@@ -32,12 +32,14 @@ import Snack from "../layout/Snack";
 type SignUpProps = {};
 
 const SignUp = (props: SignUpProps) => {
-  const cardHeight = "700";
+  const cardHeight = 700;
+  const doubleCardHeight = cardHeight * 2;
   const buttonLabel = "Sign-Up/Register";
   const nftImageBox = useRef(null);
   const [loading, setLoading] = useState(false);
   const { tokenCounter, contract } = useAppSelector(getUserState);
   const [signUpButtonDisabled, setSignUpButtonDisabled] = useState(false);
+  const userState = useAppSelector(getUserState);
 
   useEffect(() => {
     tokenCounter === 0 ? setSignUpButtonDisabled(true) : setSignUpButtonDisabled(false);
@@ -69,7 +71,7 @@ const SignUp = (props: SignUpProps) => {
   //   );
   // };
 
-  const handleSignUp = async (e: MouseEvent) => {
+  const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const pngFilename = `PasswordManage#${tokenCounter}.png`;
     const nftFilename = `PasswordManage#${tokenCounter}.dat`;
@@ -125,7 +127,7 @@ const SignUp = (props: SignUpProps) => {
             display: "flex",
             flexDirection: "column",
             [theme.breakpoints.down("md")]: {
-              height: `${cardHeight * 2}px`,
+              height: `${doubleCardHeight}px`,
             },
             [theme.breakpoints.up("md")]: {
               height: `${cardHeight}px`,
@@ -245,7 +247,7 @@ const SignUp = (props: SignUpProps) => {
                       width: "150px",
                     },
                   }}>
-                  {config.application.supportedChains[0].name}
+                  {userState.chain?.name}
                 </Typography>
                 <Typography
                   gutterBottom

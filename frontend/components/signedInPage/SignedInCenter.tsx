@@ -30,7 +30,7 @@ const SignedInCenter = () => {
   const [selectedModalForm, setSelectedModalForm] = useState(""); // possible value : update-form, alert, create-record
 
   const handleRecordItemClicked = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     selectedIndex: number
   ) => {
     updateRecordSelectedIndexFn(selectedIndex);
@@ -74,6 +74,7 @@ const SignedInCenter = () => {
       setOpenModal(true);
     } else if (mode === "create") {
       setSelectedModalForm("create-record");
+      setModalTitle(`Create New Password Record`);
       setOpenModal(true);
     }
   };
@@ -116,7 +117,7 @@ const SignedInCenter = () => {
                 display: "flex",
                 fontSize: "140%",
               }}>
-              Password's Key List
+              Password&apos;s Key List
             </Typography>
             <Button
               variant='contained'

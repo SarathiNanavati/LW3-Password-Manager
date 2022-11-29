@@ -2,28 +2,38 @@ import { AppBar, Toolbar, IconButton, Typography, Stack } from "@mui/material";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Router, { useRouter } from "next/router";
 import Image from "next/image";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { useEffect } from "react";
-import AsyncLocalStorage from "@createnextapp/async-local-storage";
+import { asyncLocalStorage } from "../utils/utils";
 
 const Navbar = () => {
   const router = useRouter();
   const { address } = useAccount();
+  const { chain, chains } = useNetwork();
 
   useEffect(() => {
     const func = async () => {
       if (address && address.length > 0) {
-        const localUserAddress = await AsyncLocalStorage.getItem("connectedAddress");
+        const localUserAddress = await asyncLocalStorage.getItem("connectedAddress");
         if (localUserAddress === "") {
-          await AsyncLocalStorage.setItem("connectedAddress", address);
+          await asyncLocalStorage.setItem("connectedAddress", address);
         } else if (localUserAddress !== address) {
-          await AsyncLocalStorage.setItem("connectedAddress", address);
+          await asyncLocalStorage.setItem("connectedAddress", address);
+          Router.reload();
+        }
+      }
+      if (chain && chain.network !== "") {
+        const connectedChain = await asyncLocalStorage.getItem("connectedChain");
+        if (connectedChain === "") {
+          await asyncLocalStorage.setItem("connectedChain", chain.network);
+        } else if (connectedChain !== chain.network) {
+          await asyncLocalStorage.setItem("connectedChain", chain.network);
           Router.reload();
         }
       }
     };
     func();
-  }, [address]);
+  }, [address, chain]);
 
   const navigateToHome: React.MouseEventHandler = (e) => {
     e.preventDefault();
@@ -48,7 +58,7 @@ const Navbar = () => {
               smallScreen: false,
               largeScreen: true,
             }}
-            accountStatus='address'
+            accountStatus='full'
             chainStatus={{
               smallScreen: "name",
               largeScreen: "full",

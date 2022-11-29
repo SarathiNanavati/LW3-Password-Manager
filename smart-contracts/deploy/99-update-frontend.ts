@@ -27,7 +27,16 @@ const updateFrontEndDetails: DeployFunction = async (hre: HardhatRuntimeEnvironm
     console.log("Updating frontend...");
     await updateContractAddresses(ethers, network);
     await updateAbi(ethers, network);
-    await copyTypes();
+    await copyTypes(
+      typeScriptDir,
+      path.join(FRONTEND_CONTRACT_TYPE_LOCATION, "contracts"),
+      "PasswordManager.ts"
+    );
+    await copyTypes(
+      path.join(__dirname, "../typechain-types/"),
+      FRONTEND_CONTRACT_TYPE_LOCATION,
+      "common.ts"
+    );
   }
 };
 
@@ -85,9 +94,9 @@ const updateAbi = async (ethers: any, network: Network) => {
   console.log("Contract ABI file created");
 };
 
-const copyTypes = () => {
-  const fromFilePath = path.join(typeScriptDir, `${contractName}.ts`);
-  const toFilePath = path.join(FRONTEND_CONTRACT_TYPE_LOCATION, `${contractName}.ts`);
+const copyTypes = (fromBaseDir: string, toBaseDir: string, fileName: string) => {
+  const fromFilePath = path.join(fromBaseDir, fileName);
+  const toFilePath = path.join(toBaseDir, fileName);
   ensureDirectoryExistence(toFilePath);
   fs.copyFileSync(fromFilePath, toFilePath);
   console.log("File Copied");

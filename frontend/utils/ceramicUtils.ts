@@ -43,13 +43,13 @@ export const authenticateCeramicClient = async (address: string): Promise<void> 
 
 export const loadDocument = async (streamId: string): Promise<CeramicStoreObjectType> => {
   const doc = await TileDocument.load(ceramicClient, streamId);
-  return doc.content;
+  return doc.content as CeramicStoreObjectType;
 };
 
 export const createDocument = async (data: CeramicStoreObjectType): Promise<string> => {
   const doc: TileDocument = await TileDocument.create(ceramicClient, data, {
     family: "LW3 Password Vault",
-    controllers: [ceramicClient.did?.id],
+    controllers: [ceramicClient.did!.id],
   });
   return doc.id.toString();
 };

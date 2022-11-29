@@ -59,12 +59,8 @@ const SignedInRight = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [showSavingSpinner, setShowSavingSpinner] = useState(false);
 
-  const chain = config.application.supportedChains[0].network;
-
-  useEffect(() => {
-    authenticateCeramicClient(userState.address!.toString());
-  }, [userState.address]);
-
+  const chain = userState.chain?.network ?? "";
+  const chainId = userState.chain?.id ?? 0;
   // Snack.success("Success");
   // Snack.info("Information");
   // Snack.warning("Warning");
@@ -74,11 +70,11 @@ const SignedInRight = () => {
   const recordAttributes =
     recordState?.recordType === RecordType.WEBSITE
       ? (recordState.recordAttributes as WebsiteType)
-      : recordState?.recordType === RecordType.CREDIT_CARD
-      ? (recordState.recordAttributes as CreditCardType)
-      : recordState?.recordType === RecordType.DOCUMENT
-      ? (recordState.recordAttributes as DocumentType)
-      : null;
+      : // : recordState?.recordType === RecordType.CREDIT_CARD
+        // ? (recordState.recordAttributes as CreditCardType)
+        // : recordState?.recordType === RecordType.DOCUMENT
+        // ? (recordState.recordAttributes as DocumentType)
+        null;
 
   const handleModalClose = () => {
     setOpenModal(false);
@@ -101,14 +97,25 @@ const SignedInRight = () => {
     setShowSavingSpinner(true);
 
     try {
-      const accessControl = getAccessControlConditions(userState.tokenId, userState.address);
+      const contractAddress =
+        config.networks[config.application.passwordManagerContractName][chainId];
+
+      const accessControl = getAccessControlConditions(
+        userState.tokenId,
+        userState.address!,
+        chain,
+        contractAddress
+      );
       const { status, encryptedString, encryptedSymmetricKey } = await encryptString(
         JSON.stringify(vaultsState),
         accessControl,
         chain
       );
       if (status) {
+        Snack.warning("Connecting to Ceramic Network");
+        await authenticateCeramicClient(userState.address!.toString());
         Snack.warning("Saving Encrypted Data on Ceramic");
+
         const dataToBeSaved: CeramicStoreObjectType = {
           accessControlConditions: accessControl,
           accessControlConditionType: "accessControlConditions",
@@ -117,7 +124,7 @@ const SignedInRight = () => {
           encryptedSymmetricKey,
         };
 
-        const streamId = await getUserStreamId(userState.contract);
+        const streamId = await getUserStreamId(userState.contract!);
 
         let newStreamId: string;
         if (streamId === "") {
@@ -128,7 +135,7 @@ const SignedInRight = () => {
         try {
           if (streamId !== newStreamId) {
             Snack.warning("Updating Details On Chain");
-            if (!(await setStream(userState.contract, userState.tokenId, newStreamId))) {
+            if (!(await setStream(userState.contract!, userState.tokenId, newStreamId))) {
               throw new Error("Error");
             }
           }
@@ -177,7 +184,7 @@ const SignedInRight = () => {
                 display: "flex",
                 fontSize: "140%",
               }}>
-              Password's Details
+              Password&apos;s Details
             </Typography>
             {/* <Button variant='text'>
               <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
@@ -220,14 +227,14 @@ const SignedInRight = () => {
                     variant='h5'
                     component='div'
                     sx={{ flex: 1, fontSize: "140%", marginLeft: "10px" }}>
-                    {recordAttributes.domaninNameOrUrl}
+                    {recordAttributes!.domaninNameOrUrl}
                   </Typography>
                   <IconButton
                     onClick={(e) =>
                       handleModalOpen(
                         "domaninNameOrUrl",
                         "Domain Name Or URL",
-                        recordAttributes.domaninNameOrUrl
+                        recordAttributes!.domaninNameOrUrl
                       )
                     }>
                     <EditIcon />
@@ -255,14 +262,14 @@ const SignedInRight = () => {
                     variant='h5'
                     component='div'
                     sx={{ flex: 1, fontSize: "140%", marginLeft: "10px" }}>
-                    {recordAttributes.userNameOrEmail}
+                    {recordAttributes!.userNameOrEmail}
                   </Typography>
                   <IconButton
                     onClick={(e) =>
                       handleModalOpen(
                         "userNameOrEmail",
                         "Email Or User Name",
-                        recordAttributes.userNameOrEmail
+                        recordAttributes!.userNameOrEmail
                       )
                     }>
                     <EditIcon />
@@ -290,7 +297,7 @@ const SignedInRight = () => {
                     variant='h5'
                     component='div'
                     sx={{ flex: 1, fontSize: "140%", marginLeft: "10px" }}>
-                    {visible ? recordAttributes.passwordOrSecret : "*******"}
+                    {visible ? recordAttributes!.passwordOrSecret : "*******"}
                   </Typography>
                   <Box>
                     <IconButton onClick={() => setVisible(!visible)}>
@@ -302,7 +309,7 @@ const SignedInRight = () => {
                         handleModalOpen(
                           "passwordOrSecret",
                           "Password",
-                          recordAttributes.passwordOrSecret
+                          recordAttributes!.passwordOrSecret
                         )
                       }>
                       <EditIcon />
@@ -335,7 +342,7 @@ const SignedInRight = () => {
                   <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
                     <TypedMessage titles={["Please Wait. We are saving your data."]} />
                   </Typography>
-                  <CircularProgress />
+                  <CircularProgress sx={{ flex: 1 }} />
                 </Box>
               </>
             ) : (

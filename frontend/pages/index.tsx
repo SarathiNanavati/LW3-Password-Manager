@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import Welcome from "../components/welcomePage/Welcome";
 import SignUp from "../components/signUpPage/SignUp";
 import SignedIn from "../components/signedInPage/SignedIn";
-import { useAccount, useContract, useEnsAvatar, useEnsName, useSigner } from "wagmi";
+import { useAccount, useContract, useEnsAvatar, useEnsName, useSigner, useNetwork } from "wagmi";
 import { config } from "../config/config";
 import abi from "../constants/abis/PasswordManager.json";
 import { getTokenCounter, getTokenId } from "../utils/ethersUtils";
-import { PasswordManager } from "../constants/types/PasswordManager";
+import { PasswordManager } from "../constants/types/contracts/PasswordManager";
 import {
   updateUserAddress,
   updateContract,
@@ -17,13 +17,13 @@ import {
   updateUserEnsName,
   updateUserEnsAvatarUrl,
   resetUser,
+  updateChain,
 } from "../features/userSlice";
 import { useAppDispatch } from "../store/store";
 import { Signer } from "ethers";
 import Router from "next/router";
 
 const { application, networks } = config;
-const chainId = application.supportedChains[0].id;
 const contractName = application.passwordManagerContractName;
 
 export enum ProcessStatus {
@@ -40,14 +40,16 @@ export enum UserStatus {
 
 const Home: NextPage = () => {
   const [tokenId, setTokenId] = useState(0);
+  const { chain, chains } = useNetwork();
   const [pageState, setPageState] = useState<UserStatus>(UserStatus.WELCOME);
   const dispatch = useAppDispatch();
   const { address, isConnected } = useAccount();
   const { data: signer } = useSigner();
   const { data: ensName } = useEnsName({ address });
   const { data: ensAvatar } = useEnsAvatar({ address });
+  const contractAddress = chain && networks[contractName][chain.id];
   const contract = useContract({
-    address: networks[contractName][chainId],
+    address: contractAddress,
     abi,
     signerOrProvider: signer,
   }) as PasswordManager;
@@ -55,9 +57,10 @@ const Home: NextPage = () => {
   useEffect(() => {
     const func = async () => {
       dispatch(resetUser());
-      dispatch(updateContract({ contract }));
-      dispatch(updateSigner({ signer: (signer as Signer)! }));
-      dispatch(updateUserAddress({ address: address! }));
+      contract && dispatch(updateContract({ contract }));
+      signer && dispatch(updateSigner({ signer: (signer as Signer)! }));
+      address && dispatch(updateUserAddress({ address: address! }));
+      chain && dispatch(updateChain({ chain: chain }));
       const tokenId = await getTokenId(contract as PasswordManager, address!);
       dispatch(updateUserTokenId({ tokenId }));
       const tokenCounter = await getTokenCounter(contract as PasswordManager);
@@ -74,7 +77,7 @@ const Home: NextPage = () => {
     if (signer) {
       func();
     }
-  }, [signer, address, ensName, ensAvatar]);
+  }, [signer, address, ensName, ensAvatar, chain, contract]);
 
   useEffect(() => {
     if (isConnected && tokenId !== 0) setPageState(UserStatus.SIGNED_IN);

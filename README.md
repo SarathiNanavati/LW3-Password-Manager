@@ -62,7 +62,7 @@ POLYGONSCAN_API_KEY = "<POLYGONSCAN_API_KEY>";
 
 2. While you are in `./smart-contracts` directory, run `npm install` to install all node module dependency
 
-3. While you are in `./smart-contracts` directory, run `npx hardhat deploy --tag all --network goerli` to deploy updated contract on Goerli Network.
+3. While you are in `./smart-contracts` directory, run `npx hardhat deploy --tags all --network goerli` to deploy updated contract on Goerli Network.
    <br>
    Just change the network from `"goerli"` to `"mumbai"` to deploy contract on mumbai network. Mentioned commands does following things
    - Deploy and verify the contract on respective chain/network.
@@ -92,11 +92,11 @@ Currently Application supports two networks : `Goerli and Polygon Mumbai`
 
 ## Tech-Stacks Used
 
-  1.  [Hardhat](https://hardhat.org/) for Smart Contract Development
-  2.  [NextJS](https://nextjs.org/) framework for Frontend Development
-  3.  [Pinata](https://www.pinata.cloud/) for IPFS support
-  4.  [LIT Protocol](https://litprotocol.com/) to provide AccessControl, Encryption and Decryption
-  5.  [Ceramic Network](https://ceramic.network/) to Store Data
+1.  [Hardhat](https://hardhat.org/) for Smart Contract Development
+2.  [NextJS](https://nextjs.org/) framework for Frontend Development
+3.  [Pinata](https://www.pinata.cloud/) for IPFS support
+4.  [LIT Protocol](https://litprotocol.com/) to provide AccessControl, Encryption and Decryption
+5.  [Ceramic Network](https://ceramic.network/) to Store Data
 
 ## Other Features
 

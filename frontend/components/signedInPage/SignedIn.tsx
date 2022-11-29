@@ -11,13 +11,23 @@ import { getUserStreamId } from "../../utils/ethersUtils";
 import { getVaultsState, updateVaultsState } from "../../features/vaultSlice";
 import Snack from "../layout/Snack";
 import TypedMessage from "../ui/TypedMessage";
+import { config } from "../../config/config";
 
 type SignedInProps = {};
 
 const SignedIn = (props: SignedInProps) => {
   const userState = useAppSelector(getUserState);
   const vaultsState = useAppSelector(getVaultsState);
-  const accessControl = getAccessControlConditions(userState.tokenId, userState.address);
+  const contractAddress =
+    userState.chain &&
+    config.networks[config.application.passwordManagerContractName][userState.chain.id];
+
+  const accessControl = getAccessControlConditions(
+    userState.tokenId,
+    userState.address!.toString(),
+    userState.chain!.network,
+    contractAddress!
+  );
   const [pageLoaded, setPageLoaded] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -26,7 +36,7 @@ const SignedIn = (props: SignedInProps) => {
   useEffect(() => {
     const callFn = async () => {
       try {
-        const streamId = await getUserStreamId(userState.contract);
+        const streamId = await getUserStreamId(userState.contract!);
         if (streamId === "") {
           dispatch(updateUserOldVaultsState({ vaultsState }));
         } else {

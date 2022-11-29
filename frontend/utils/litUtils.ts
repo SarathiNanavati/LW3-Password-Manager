@@ -4,10 +4,25 @@ import { blobToDataURI, dataURItoBlob } from "./utils";
 
 const litClient = new LitJsSdk.LitNodeClient();
 
-export const getAccessControlConditions = (tokenId: number, address: string) => {
+export const getAccessControlConditions = (
+  tokenId: number,
+  address: string,
+  chain: string,
+  contractAddress: string
+) => {
+  const updatedChain = chain === "maticmum" ? "mumbai" : chain;
+
   const accessControl = config.application.litAccessControlConditions;
+  accessControl[0].contractAddress = contractAddress;
+  accessControl[0].chain = updatedChain;
+
+  accessControl[2].contractAddress = contractAddress;
+  accessControl[2].chain = updatedChain;
   accessControl[2].parameters = [tokenId.toString()];
   accessControl[2].returnValueTest.value = address;
+
+  accessControl[4].chain = updatedChain;
+
   return accessControl;
 };
 
@@ -28,20 +43,21 @@ export const encryptString = async (
   accessControlConditions: any,
   chain: string
 ): Promise<{ status: boolean; encryptedString?: any; encryptedSymmetricKey?: any }> => {
-  await connectToLitNetwork();
+  const updatedChain = chain === "maticmum" ? "mumbai" : chain;
 
   try {
+    await connectToLitNetwork();
+    console.log("asdfasdfadfasdf", chain);
     let authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain,
+      chain: updatedChain,
     });
-
     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(data);
 
     let encryptedSymmetricKey = await litClient.saveEncryptionKey({
       accessControlConditions,
       symmetricKey,
       authSig,
-      chain,
+      chain: updatedChain,
     });
 
     return {
@@ -61,18 +77,19 @@ export const decryptString = async (
   accessControlConditions: any,
   chain: string
 ) => {
-  await connectToLitNetwork();
+  const updatedChain = chain === "maticmum" ? "mumbai" : chain;
 
   try {
+    await connectToLitNetwork();
     let authSig = await LitJsSdk.checkAndSignAuthMessage({
-      chain,
+      chain: updatedChain,
     });
 
     const symmetricKey = await litClient.getEncryptionKey({
       toDecrypt: encryptedSymmetricKey,
       accessControlConditions,
       authSig,
-      chain,
+      chain: updatedChain,
     });
 
     const decryptedString = await LitJsSdk.decryptString(

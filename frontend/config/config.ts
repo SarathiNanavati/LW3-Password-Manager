@@ -12,15 +12,15 @@ export enum APIKEYNAME {
 export const config: ConfigMapping = {
   application: {
     name: "LW3 Lit Password Manager",
-    supportedChains: [chain.goerli],
+    supportedChains: [chain.goerli, chain.polygonMumbai],
     passwordManagerContractName: "PasswordManager",
     defaultBlockConfirmations: 2,
     snakeBarAutoHideDuration: 5000,
     litAccessControlConditions: [
       {
-        contractAddress: dataJson["PasswordManager"][chain.goerli.id],
+        contractAddress: "",
         standardContractType: "ERC721",
-        chain: chain.goerli.network,
+        chain: "",
         method: "balanceOf",
         parameters: [":userAddress"],
         returnValueTest: {
@@ -30,9 +30,9 @@ export const config: ConfigMapping = {
       },
       { operator: "and" },
       {
-        contractAddress: dataJson["PasswordManager"][chain.goerli.id],
+        contractAddress: "",
         standardContractType: "ERC721",
-        chain: chain.goerli.network,
+        chain: "",
         method: "ownerOf",
         parameters: [],
         returnValueTest: {
@@ -44,7 +44,7 @@ export const config: ConfigMapping = {
       {
         contractAddress: "",
         standardContractType: "",
-        chain: chain.goerli.network,
+        chain: "",
         method: "eth_getBalance",
         parameters: [":userAddress", "latest"],
         returnValueTest: {

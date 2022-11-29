@@ -5,15 +5,16 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { addNewVault, getVaultsState, updateVaultName } from "../../features/vaultSlice";
 
 type CreateVaultFormProps = {
-  itemIndex?: number;
+  itemIndex: number;
   handleModalClose: () => void;
-  editMode?: boolean;
+  editMode: boolean;
 };
 
 const CreateVaultForm = (props: CreateVaultFormProps) => {
   const vaultState = useAppSelector(getVaultsState);
+  const itemIndex = props?.itemIndex;
   const [vaultName, setVaultName] = useState(
-    props.editMode ? vaultState.vaults[props.itemIndex].vaultName : ""
+    props.editMode ? vaultState.vaults[itemIndex].vaultName : ""
   );
 
   const [vaultErrorMessage, setVaultErrorMessage] = useState("");

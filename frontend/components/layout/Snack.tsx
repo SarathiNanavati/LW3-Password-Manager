@@ -24,11 +24,12 @@ const setUseSnackbarRef = (useSnackbarRefProp: WithSnackbarProps) => {
 };
 
 export const SnackbarUtilsConfigurator = (props: { children?: React.ReactNode }) => {
-  return (
-    <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef}>
-      {props.children}
-    </InnerSnackbarUtilsConfigurator>
-  );
+  return <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef} />;
+
+  {
+    /* {props.children}
+    </InnerSnackbarUtilsConfigurator> */
+  }
 };
 
 //sets a default length for all Snack messages
