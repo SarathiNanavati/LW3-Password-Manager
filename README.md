@@ -5,8 +5,8 @@
 ### "LW3 Password Vault" is a "EarnWeb3" de-centralized password Manager initialive organized by "LearnWeb3".
 
 - Application Stores your passwords details on chains in a encrypted manner.
-- Application uses "LIT Protocol"<pending> to Encrypt, Decrypt and Accesscontrol making it accessible to user's only.
-- Application uses "Ceramic Network"<pending> to store User's Encrypted Data in a Tile Document. It helps us to add one more layer of security
+- Application uses [LIT Protocol](https://litprotocol.com/) to Encrypt, Decrypt and Accesscontrol making it accessible to user's only.
+- Application uses [Ceramic Network](https://ceramic.network/) to store User's Encrypted Data in a Tile Document. It helps us to add one more layer of security
 - Dynamically generated NFT's are used as access token for Application usage.
 - Currently Supporting Goerli and Polygon Mumbai. However more network supports can be configured.
 
