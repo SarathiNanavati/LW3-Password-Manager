@@ -92,11 +92,11 @@ Currently Application supports two networks : `Goerli and Polygon Mumbai`
 
 ## Tech-Stacks Used
 
-1.  Hardhat for Smart Contract Development
-2.  NextJS framework for Frontend Development
-3.  PINATA for IPFS support
-4.  [LIT Protocol](https://litprotocol.com/) to provide AccessControl, Encryption and Decryption
-5.  [Ceramic Network](https://ceramic.network/) to Store Data
+  1.  [Hardhat](https://hardhat.org/) for Smart Contract Development
+  2.  [NextJS](https://nextjs.org/) framework for Frontend Development
+  3.  [Pinata](https://www.pinata.cloud/) for IPFS support
+  4.  [LIT Protocol](https://litprotocol.com/) to provide AccessControl, Encryption and Decryption
+  5.  [Ceramic Network](https://ceramic.network/) to Store Data
 
 ## Other Features
 
