@@ -337,7 +337,7 @@ const SignedInRight = () => {
                   <Typography gutterBottom variant='h4' component='div' sx={{ fontSize: "140%" }}>
                     <TypedMessage titles={["Please Wait. We are saving your data."]} />
                   </Typography>
-                  <CircularProgress sx={{ flex: 1 }} />
+                  <CircularProgress />
                 </Box>
               </>
             ) : (
