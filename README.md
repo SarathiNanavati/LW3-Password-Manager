@@ -14,6 +14,11 @@
 
 ## Project Flows and Supporting Screenshots
 
+- Home Page
+- Sign-Up Page
+  asdf
+- Logged-In Page
+
 opensea testnet image to be shared
 
 ## Setup
@@ -28,7 +33,7 @@ Currently Password Manager Smart Contract is deployed on
 
 In-case Password Manager contract needs an enhancement, below steps should be followed
 
-1. Create a copy of `./smart-contracts/.env.example` as .env and populate all below parameters
+1. Create a copy of `./smart-contracts/.env.example` as `.env` and populate all below parameters
 
 ```javascript
 PRIVATE_KEY = "<DEPLOYERS_PRIVATE_KEY>";
@@ -45,9 +50,22 @@ POLYGONSCAN_API_KEY = "<POLYGONSCAN_API_KEY>";
    - Generate Contract's types for easier accessibility.
    - Copy Abi, Network Mapping and Contract Types to frontend directory.
 
-### Prerequisites
+### NestJS Frontend
 
-.env.example for nextjs
+Password Manager Vault Application is a NEXTJS Application. Below steps needs to followed for deployment
+
+1.  Create a copy of `./frontend/.env.local.example` as `.env.local` and populate all below parameters
+
+```javascript
+NEXT_PUBLIC_POLYGONMUMBAI_ALCHEMY_API_KEY = "<POLYGONMUMBAI_ALCHEMY_API_KEY>";
+NEXT_PUBLIC_PINATA_API_KEY = "<PINATA_API_KEY>";
+NEXT_PUBLIC_PINATA_API_SECRET = "<PINATA_API_SECRET>";
+```
+
+2. While you are in `./frontend/` directory, run `npm install` to install all dependency.
+
+3. While you are in `./frontend/` directory, run `npm run dev` to start application in development mode.<br>
+   For production, create production build as `npm run build`.
 
 ### Netwrok changes
 
