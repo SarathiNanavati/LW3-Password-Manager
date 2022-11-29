@@ -1,7 +1,6 @@
 import { isEqual } from "lodash";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer, { updateUserVaultUpdatedStatus } from "../features/userSlice";
-// import snackBarReducer from "../features/snackBarSlice";
 import vaultSlice from "../features/vaultSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 

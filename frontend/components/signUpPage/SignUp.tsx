@@ -13,17 +13,11 @@ import { theme } from "../../theme/theme";
 import * as htmlToImage from "html-to-image";
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useAppSelector } from "../../store/store";
 import { getUserState } from "../../features/userSlice";
 import { pinFileToIPFS, pinMetaDataToIPFS } from "../../utils/pinataUtils";
 import { createMetaDataJson, dataURLtoFile } from "../../utils/utils";
 import { mintNFTAccessToken } from "../../utils/ethersUtils";
-// import {
-//   updateSnackBarMessage,
-//   updateSnackBarOpen,
-//   updateSnackBarSeverity,
-// } from "../../features/snackBarSlice";
-import { config } from "../../config/config";
 import Router from "next/router";
 import Snack from "../layout/Snack";
 

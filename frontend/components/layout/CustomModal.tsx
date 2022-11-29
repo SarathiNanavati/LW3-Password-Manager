@@ -1,13 +1,4 @@
-import {
-  Modal,
-  Box,
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Backdrop,
-  Fade,
-} from "@mui/material";
+import { Modal, Box, Card, CardHeader, CardContent, Backdrop, Fade } from "@mui/material";
 
 type CustomModalProps = {
   openModal: boolean;

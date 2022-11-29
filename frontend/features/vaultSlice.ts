@@ -1,8 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
-import { AlertColor } from "@mui/material";
-import { config } from "../config/config";
-import _ from "lodash";
 
 export enum RecordType {
   WEBSITE = "WEBSITE",

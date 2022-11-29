@@ -1,8 +1,5 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
-import { trim } from "lodash";
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { addNewVault, getVaultsState, updateVaultName } from "../../features/vaultSlice";
+import { Box, Typography,  Button } from "@mui/material";
+
 
 type CancelConfirmFormProps = {
   message: string;

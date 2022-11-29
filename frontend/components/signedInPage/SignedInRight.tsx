@@ -14,10 +14,6 @@ import {
   VisibilityOff as VisibilityOffIcon,
 } from "@mui/icons-material";
 import {
-  CreditCardType,
-  DocumentType,
-  getSelectedRecordIndex,
-  getSelectedVaultIndex,
   getSelectedVaultRecord,
   getVaultsState,
   RecordType,
@@ -25,7 +21,7 @@ import {
   WebsiteType,
 } from "../../features/vaultSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CustomModal from "../layout/CustomModal";
 import SingleUpdateInputFieldForm from "../forms/SingleUpdateInputFieldForm";
 import {
@@ -33,7 +29,7 @@ import {
   updateUserOldVaultsState,
   updateUserVaultUpdatedStatus,
 } from "../../features/userSlice";
-import { decryptString, encryptString, getAccessControlConditions } from "../../utils/litUtils";
+import { encryptString, getAccessControlConditions } from "../../utils/litUtils";
 import { config } from "../../config/config";
 import Snack from "../layout/Snack";
 import {
@@ -43,7 +39,6 @@ import {
   updateDocument,
 } from "../../utils/ceramicUtils";
 import { getUserStreamId, setStream } from "../../utils/ethersUtils";
-import Router from "next/router";
 import TypedMessage from "../ui/TypedMessage";
 
 const SignedInRight = () => {
@@ -141,7 +136,7 @@ const SignedInRight = () => {
           }
           dispatch(updateUserVaultUpdatedStatus({ vaultStatus: false }));
           dispatch(updateUserOldVaultsState({ vaultsState: vaultsState }));
-          Snack.success("Data Save On Chain Successfully. Page will be reloaded in 5 second");
+          Snack.success("Data Save On Chain Successfully.");
         } catch (error) {
           throw error;
         }

@@ -2,7 +2,6 @@ import Navbar from "../Navbar";
 import { Container, Snackbar, SnackbarProps, Alert, AlertProps } from "@mui/material";
 import { forwardRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-// import { getSnackBarState, updateSnackBarOpen } from "../../features/snackBarSlice";
 import { SnackbarProvider } from "notistack";
 import { SnackbarUtilsConfigurator } from "./Snack";
 

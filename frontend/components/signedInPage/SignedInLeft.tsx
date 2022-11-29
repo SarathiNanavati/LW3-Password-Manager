@@ -10,7 +10,6 @@ import {
 import { useState } from "react";
 import { getMaskedUserAddress, getUserState } from "../../features/userSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { config } from "../../config/config";
 import { sleepInMilliSeconds } from "../../utils/utils";
 import {
   deleteVaultByIndex,

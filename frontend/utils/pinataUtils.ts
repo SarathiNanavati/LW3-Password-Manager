@@ -1,5 +1,4 @@
 import { APIKEYNAME, config } from "../config/config";
-import * as fs from "fs";
 import axios, { AxiosResponse } from "axios";
 import FormData from "form-data";
 import { NFTMetaDataType } from "./utils";
