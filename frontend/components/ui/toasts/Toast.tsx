@@ -45,8 +45,18 @@ const Toast = ({ toast }: ToastPropsType) => {
               <Button color='inherit' size='small' onClick={() => deleteToast()}>
                 X
               </Button>
-            }>
-            <AlertTitle>{toast.title}</AlertTitle>
+            }
+            sx={{
+              fontSize: "16px",
+              fontWeight: "600",
+            }}>
+            <AlertTitle
+              sx={{
+                fontSize: "18px",
+                fontWeight: "800",
+              }}>
+              {toast.title}
+            </AlertTitle>
             {toast.description}
           </Alert>
         </div>

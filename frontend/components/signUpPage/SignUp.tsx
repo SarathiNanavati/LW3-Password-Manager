@@ -79,29 +79,37 @@ const SignUp = (props: SignUpProps) => {
               Router.reload();
             }, 5000);
           } else {
-            addErrorToast({
-              title: "Error:",
-              description: "Minting NFT Failed",
-            });
+            dispatch(
+              addErrorToast({
+                title: "Error:",
+                description: "Minting NFT Failed",
+              })
+            );
           }
         } else {
+          dispatch(
+            addErrorToast({
+              title: "Error:",
+              description: "Could Not Upload NFT to IPFS",
+            })
+          );
+        }
+      } else {
+        dispatch(
           addErrorToast({
             title: "Error:",
             description: "Could Not Upload NFT to IPFS",
-          });
-        }
-      } else {
-        addErrorToast({
-          title: "Error:",
-          description: "Could Not Upload NFT to IPFS",
-        });
+          })
+        );
       }
     } catch (error) {
       console.error(error);
-      addErrorToast({
-        title: "Error:",
-        description: "Minting Failed",
-      });
+      dispatch(
+        addErrorToast({
+          title: "Error:",
+          description: "Minting Failed",
+        })
+      );
     } finally {
       setLoading(false);
     }
