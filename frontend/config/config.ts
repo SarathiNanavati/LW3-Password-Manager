@@ -53,7 +53,7 @@ export const config: ConfigMapping = {
         },
       },
     ],
-    notificationAutoHideTime: 3000,
+    notificationAutoHideTime: 5000,
   },
   client: {
     POLYGONMUMBAI_ALCHEMY_API_KEY:
