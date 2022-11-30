@@ -2,8 +2,7 @@ import Navbar from "../Navbar";
 import { Container, Snackbar, SnackbarProps, Alert, AlertProps } from "@mui/material";
 import { forwardRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { SnackbarProvider } from "notistack";
-import { SnackbarUtilsConfigurator } from "./Snack";
+import ToastContainer from "../ui/toasts/ToastContainer";
 
 const SnackbarAlert = forwardRef<HTMLDivElement, AlertProps>(function SnackbarAlert(props, ref) {
   return <Alert elevation={23} ref={ref} {...props} sx={{ fontSize: "30px" }} />;
@@ -27,25 +26,11 @@ const Layout = (props: React.ComponentPropsWithoutRef<"p">) => {
 
   return (
     <>
-      <SnackbarProvider
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        autoHideDuration={6000}
-        maxSnack={2}>
-        <SnackbarUtilsConfigurator />
-        <Navbar />
-        <Container disableGutters={true} maxWidth='xl'>
-          {props.children}
-        </Container>
-
-        {/* <Snackbar {...snackBarProps} onClose={handleClose}>
-          <SnackbarAlert onClose={handleClose} severity={snackBarState.severity}>
-            {snackBarState.message}
-          </SnackbarAlert>
-        </Snackbar> */}
-      </SnackbarProvider>
+      <Navbar />
+      <Container disableGutters={true} maxWidth='xl'>
+        {props.children}
+      </Container>
+      <ToastContainer />
     </>
   );
 };

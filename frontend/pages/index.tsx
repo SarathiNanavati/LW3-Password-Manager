@@ -79,7 +79,8 @@ const Home: NextPage = () => {
   }, [signer, address, ensName, ensAvatar, chain, contract]);
 
   useEffect(() => {
-    if (isConnected && tokenId !== 0) setPageState(UserStatus.SIGNED_IN);
+    if (!chain) setPageState(UserStatus.WELCOME);
+    else if (isConnected && tokenId !== 0) setPageState(UserStatus.SIGNED_IN);
     else if (isConnected && tokenId === 0) setPageState(UserStatus.CONNECTED);
     else setPageState(UserStatus.WELCOME);
   }, [tokenId, isConnected, address]);

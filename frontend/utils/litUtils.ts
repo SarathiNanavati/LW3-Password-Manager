@@ -47,7 +47,6 @@ export const encryptString = async (
 
   try {
     await connectToLitNetwork();
-    console.log("asdfasdfadfasdf", chain);
     let authSig = await LitJsSdk.checkAndSignAuthMessage({
       chain: updatedChain,
     });

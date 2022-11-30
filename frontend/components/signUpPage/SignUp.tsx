@@ -13,13 +13,13 @@ import { theme } from "../../theme/theme";
 import * as htmlToImage from "html-to-image";
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getUserState } from "../../features/userSlice";
 import { pinFileToIPFS, pinMetaDataToIPFS } from "../../utils/pinataUtils";
 import { createMetaDataJson, dataURLtoFile } from "../../utils/utils";
 import { mintNFTAccessToken } from "../../utils/ethersUtils";
 import Router from "next/router";
-import Snack from "../layout/Snack";
+import { addErrorToast, addInfoToast, addSuccessToast } from "../../features/toastSlice";
 
 //...
 
@@ -34,36 +34,11 @@ const SignUp = (props: SignUpProps) => {
   const { tokenCounter, contract } = useAppSelector(getUserState);
   const [signUpButtonDisabled, setSignUpButtonDisabled] = useState(false);
   const userState = useAppSelector(getUserState);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     tokenCounter === 0 ? setSignUpButtonDisabled(true) : setSignUpButtonDisabled(false);
   }, [tokenCounter]);
-
-  // const setSnackBarToInfo = () => {
-  //   // dispatch(updateSnackBarMessage({ message: "Please wait. We will mint NFT for you" }));
-  //   // dispatch(updateSnackBarOpen({ open: true }));
-  //   // dispatch(updateSnackBarSeverity({ severity: "info" }));
-  // };
-
-  // const setSnackBarToError = () => {
-  //   // dispatch(updateSnackBarMessage({ message: "Minting NFT Failed" }));
-  //   // dispatch(updateSnackBarOpen({ open: true }));
-  //   // dispatch(updateSnackBarSeverity({ severity: "error" }));
-  //   Snack.error("Minting NFT Failed");
-  // };
-
-  // const setSnackBarToSuccess = () => {
-  //   // dispatch(
-  //   //   updateSnackBarMessage({
-  //   //     message: `Congrat! You now have access to Password Vault.. Page will auto refresh in 5 seconds`,
-  //   //   })
-  //   // );
-  //   // dispatch(updateSnackBarOpen({ open: true }));
-  //   // dispatch(updateSnackBarSeverity({ severity: "success" }));
-  //   Snack.success(
-  //     "Congrat! You now have access to Password Vault.. Page will auto refresh in 5 seconds"
-  //   );
-  // };
 
   const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -72,7 +47,7 @@ const SignUp = (props: SignUpProps) => {
 
     try {
       setLoading(true);
-      Snack.warning("Uploading Your NFT To IPFS");
+      dispatch(addInfoToast({ title: "Info:", description: "Uploading Your NFT To IPFS" }));
 
       const dataUrl = await htmlToImage.toPng(nftImageBox.current!);
       var file = dataURLtoFile(dataUrl, pngFilename);
@@ -82,32 +57,51 @@ const SignUp = (props: SignUpProps) => {
         const nftMetaData = createMetaDataJson(ipfsHashUrl);
         const pinMetaDataToIPFSResponse = await pinMetaDataToIPFS(nftMetaData, nftFilename);
         if (pinMetaDataToIPFSResponse.status) {
-          Snack.warning("Registering Your NFT on BlockChain");
+          dispatch(
+            addInfoToast({ title: "Info:", description: "Registering Your NFT on BlockChain" })
+          );
 
           const mintNFTAccessTokenStatus = await mintNFTAccessToken(
             contract!,
             pinMetaDataToIPFSResponse.ipfsHashUrl
           );
           if (mintNFTAccessTokenStatus) {
-            Snack.success(
-              "Congratulations! You now have access to Password Vault.. Page will auto refresh in 5 seconds"
+            dispatch(
+              addSuccessToast({
+                title: "Success:",
+                description:
+                  "Congratulations! You now have access to Password Vault.. Page will auto refresh in 5 seconds",
+              })
             );
+
             setSignUpButtonDisabled(true);
             setInterval(() => {
               Router.reload();
             }, 5000);
           } else {
-            Snack.error("Minting NFT Failed");
+            addErrorToast({
+              title: "Error:",
+              description: "Minting NFT Failed",
+            });
           }
         } else {
-          Snack.error("Could Not Upload NFT to IPFS");
+          addErrorToast({
+            title: "Error:",
+            description: "Could Not Upload NFT to IPFS",
+          });
         }
       } else {
-        Snack.error("Could Not Upload NFT to IPFS");
+        addErrorToast({
+          title: "Error:",
+          description: "Could Not Upload NFT to IPFS",
+        });
       }
     } catch (error) {
       console.error(error);
-      Snack.error("Minting Failed");
+      addErrorToast({
+        title: "Error:",
+        description: "Minting Failed",
+      });
     } finally {
       setLoading(false);
     }

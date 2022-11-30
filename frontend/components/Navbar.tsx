@@ -1,15 +1,19 @@
-import { AppBar, Toolbar, IconButton, Typography, Stack } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Stack, Button } from "@mui/material";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Router, { useRouter } from "next/router";
 import Image from "next/image";
 import { useAccount, useNetwork } from "wagmi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { asyncLocalStorage } from "../utils/utils";
+import { useAppDispatch } from "../store/store";
+import { addSuccessToast } from "../features/toastSlice";
 
 const Navbar = () => {
   const router = useRouter();
   const { address } = useAccount();
   const { chain, chains } = useNetwork();
+  const dispatch = useAppDispatch();
+  const [counter, setCounter] = useState(1);
 
   useEffect(() => {
     const func = async () => {
@@ -64,6 +68,20 @@ const Navbar = () => {
               largeScreen: "full",
             }}
           />
+          {/* <Button
+            color='inherit'
+            size='small'
+            onClick={() => {
+              dispatch(
+                addWarningToast({
+                  title: `Hi ${counter}`,
+                  description: "Hello",
+                })
+              );
+              setCounter(counter + 1);
+            }}>
+            X
+          </Button> */}
         </Stack>
       </Toolbar>
     </AppBar>

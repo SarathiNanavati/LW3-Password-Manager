@@ -7062,14 +7062,6 @@
   "resolved" "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz"
   "version" "3.0.0"
 
-"notistack@^2.0.8":
-  "integrity" "sha512-/IY14wkFp5qjPgKNvAdfL5Jp6q90+MjgKTPh4c81r/lW70KeuX6b9pE/4f8L4FG31cNudbN9siiFS5ql1aSLRw=="
-  "resolved" "https://registry.npmjs.org/notistack/-/notistack-2.0.8.tgz"
-  "version" "2.0.8"
-  dependencies:
-    "clsx" "^1.1.0"
-    "hoist-non-react-statics" "^3.3.0"
-
 "npm-run-path@^2.0.0":
   "integrity" "sha512-lJxZYlT4DW/bRUtFh1MQIWqmLwQfAxnqWG4HhEdjMlkrJYnJn0Jrr2u3mgxqaWsdiBc76TYkTG/mhrnYTuzfHw=="
   "resolved" "https://registry.npmjs.org/npm-run-path/-/npm-run-path-2.0.2.tgz"

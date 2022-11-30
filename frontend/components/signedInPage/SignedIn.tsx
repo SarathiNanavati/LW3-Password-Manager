@@ -9,9 +9,9 @@ import { useState, useEffect } from "react";
 import { authenticateCeramicClient, loadDocument } from "../../utils/ceramicUtils";
 import { getUserStreamId } from "../../utils/ethersUtils";
 import { getVaultsState, updateVaultsState } from "../../features/vaultSlice";
-import Snack from "../layout/Snack";
 import TypedMessage from "../ui/TypedMessage";
 import { config } from "../../config/config";
+import { addErrorToast, addInfoToast, addSuccessToast } from "../../features/toastSlice";
 
 type SignedInProps = {};
 
@@ -40,7 +40,10 @@ const SignedIn = (props: SignedInProps) => {
         if (streamId === "") {
           dispatch(updateUserOldVaultsState({ vaultsState }));
         } else {
+          dispatch(addInfoToast({ title: "Info:", description: "Authenticating Connected User" }));
           await authenticateCeramicClient(userState.address!.toString());
+          dispatch(addInfoToast({ title: "Info:", description: "Fetching Data from Chain" }));
+
           const doc = await loadDocument(streamId);
           const { status, decryptedString } = await decryptString(
             doc.encryptedString,
@@ -53,11 +56,17 @@ const SignedIn = (props: SignedInProps) => {
           dispatch(updateUserOldVaultsState({ vaultsState: loadedVaultsState }));
           dispatch(updateVaultsState({ vaultsState: loadedVaultsState }));
         }
+        dispatch(addSuccessToast({ title: "Success:", description: "Loaded User Data" }));
 
         setPageLoaded(true);
       } catch (error) {
         console.error(error);
-        Snack.error("Failed to Load Data, Please connect with Administrator");
+        dispatch(
+          addErrorToast({
+            title: "Error:",
+            description: "Failed to Load Data, Please connect with Administrator",
+          })
+        );
       }
     };
 

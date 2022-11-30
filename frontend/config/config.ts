@@ -53,6 +53,7 @@ export const config: ConfigMapping = {
         },
       },
     ],
+    notificationAutoHideTime: 3000,
   },
   client: {
     POLYGONMUMBAI_ALCHEMY_API_KEY:
@@ -77,6 +78,7 @@ export type ApplicationConfig = {
   defaultBlockConfirmations: number;
   snakeBarAutoHideDuration: number;
   litAccessControlConditions: any;
+  notificationAutoHideTime: number;
 };
 
 export type ClientConfig = {

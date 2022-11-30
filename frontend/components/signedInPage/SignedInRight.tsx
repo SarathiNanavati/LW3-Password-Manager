@@ -31,7 +31,6 @@ import {
 } from "../../features/userSlice";
 import { encryptString, getAccessControlConditions } from "../../utils/litUtils";
 import { config } from "../../config/config";
-import Snack from "../layout/Snack";
 import {
   authenticateCeramicClient,
   CeramicStoreObjectType,
@@ -40,6 +39,7 @@ import {
 } from "../../utils/ceramicUtils";
 import { getUserStreamId, setStream } from "../../utils/ethersUtils";
 import TypedMessage from "../ui/TypedMessage";
+import { addErrorToast, addInfoToast, addSuccessToast } from "../../features/toastSlice";
 
 const SignedInRight = () => {
   const userState = useAppSelector(getUserState);
@@ -56,11 +56,6 @@ const SignedInRight = () => {
 
   const chain = userState.chain?.network ?? "";
   const chainId = userState.chain?.id ?? 0;
-  // Snack.success("Success");
-  // Snack.info("Information");
-  // Snack.warning("Warning");
-  // Snack.error("Error");
-  // Snack.toast("Toast");
 
   const recordAttributes =
     recordState?.recordType === RecordType.WEBSITE
@@ -88,7 +83,10 @@ const SignedInRight = () => {
   };
 
   const handleSaveChangesOnChain = async (): Promise<void> => {
-    Snack.warning("Please wait While you data is being saved");
+    dispatch(
+      addInfoToast({ title: "Info:", description: "Please wait While you data is being saved" })
+    );
+
     setShowSavingSpinner(true);
 
     try {
@@ -107,9 +105,19 @@ const SignedInRight = () => {
         chain
       );
       if (status) {
-        Snack.warning("Connecting to Ceramic Network");
+        dispatch(
+          addInfoToast({
+            title: "Info:",
+            description: "Connecting to Ceramic Network",
+          })
+        );
         await authenticateCeramicClient(userState.address!.toString());
-        Snack.warning("Saving Encrypted Data on Ceramic");
+        dispatch(
+          addInfoToast({
+            title: "Info:",
+            description: "Saving Encrypted Data on Ceramic",
+          })
+        );
 
         const dataToBeSaved: CeramicStoreObjectType = {
           accessControlConditions: accessControl,
@@ -129,21 +137,36 @@ const SignedInRight = () => {
         }
         try {
           if (streamId !== newStreamId) {
-            Snack.warning("Updating Details On Chain");
+            dispatch(
+              addInfoToast({
+                title: "Info:",
+                description: "Updating Details On Chain",
+              })
+            );
             if (!(await setStream(userState.contract!, userState.tokenId, newStreamId))) {
               throw new Error("Error");
             }
           }
           dispatch(updateUserVaultUpdatedStatus({ vaultStatus: false }));
           dispatch(updateUserOldVaultsState({ vaultsState: vaultsState }));
-          Snack.success("Data Save On Chain Successfully.");
+          dispatch(
+            addSuccessToast({
+              title: "Success:",
+              description: "Data Save On Chain Successfully.",
+            })
+          );
         } catch (error) {
           throw error;
         }
       }
     } catch (error) {
       console.error(error);
-      Snack.error("Failed to Save Data");
+      dispatch(
+        addErrorToast({
+          title: "Failed:",
+          description: "Failed to Save Data",
+        })
+      );
     }
     setShowSavingSpinner(false);
   };

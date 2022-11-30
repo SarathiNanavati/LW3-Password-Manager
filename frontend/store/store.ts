@@ -2,6 +2,7 @@ import { isEqual } from "lodash";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer, { updateUserVaultUpdatedStatus } from "../features/userSlice";
 import vaultSlice from "../features/vaultSlice";
+import toastSlice from "../features/toastSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     user: userReducer,
     // snackBar: snackBarReducer,
     vault: vaultSlice,
+    toast: toastSlice,
   },
   devTools: true,
 });

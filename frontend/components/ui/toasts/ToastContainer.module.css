@@ -1,0 +1,8 @@
+.container {
+  margin: 1rem;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  z-index: 78;
+  /* background-color: rgba(10, 10, 10, 0.5); */
+}
