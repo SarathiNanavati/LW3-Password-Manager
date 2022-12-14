@@ -12,6 +12,7 @@ import { getVaultsState, updateVaultsState } from "../../features/vaultSlice";
 import TypedMessage from "../ui/TypedMessage";
 import { config } from "../../config/config";
 import { addErrorToast, addInfoToast, addSuccessToast } from "../../features/toastSlice";
+import { theme } from "../../theme/theme";
 
 type SignedInProps = {};
 
@@ -81,6 +82,9 @@ const SignedIn = (props: SignedInProps) => {
             display: "flex",
             flexDirection: "column",
             height: "600px",
+            [theme.breakpoints.down("md")]: {
+              height: "auto",
+            },
           }}>
           {pageLoaded ? (
             <Grid container sx={{ flex: 1, display: "flex", justifyContent: "space-evenly" }}>

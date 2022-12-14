@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
+import { theme } from "../../theme/theme";
 
 type WelcomeCardProps = {
   iconUrl: string;
@@ -17,7 +18,16 @@ const WelcomeCard = ({
 }: WelcomeCardProps) => {
   return (
     <Card sx={{ bgcolor: "grey.200", color: "common.black" }}>
-      <CardContent sx={{ display: "flex", flexDirection: "row", height: "320px" }}>
+      <CardContent
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          [theme.breakpoints.down("md")]: {
+            flexDirection: "column",
+            alignItems: "center",
+            justifyItems: "center",
+          },
+        }}>
         <Avatar
           src={iconUrl}
           sx={{
@@ -29,10 +39,34 @@ const WelcomeCard = ({
           }}
         />
         <Box sx={{ flex: 1, marginLeft: "30px", marginTop: "10px" }}>
-          <Typography gutterBottom variant='h4' component='div'>
+          <Typography
+            gutterBottom
+            component='div'
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: "600",
+              [theme.breakpoints.down("md")]: {
+                fontSize: "1rem",
+                fontWeight: "600",
+              },
+              [theme.breakpoints.down("lg")]: {
+                fontSize: "1.2rem",
+                fontWeight: "600",
+              },
+            }}>
             {title.toUpperCase()}
           </Typography>
-          <Typography gutterBottom variant='h5' component='div'>
+          <Typography
+            gutterBottom
+            component='div'
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: "400",
+              [theme.breakpoints.down("md")]: {
+                fontSize: "1rem",
+                fontWeight: "400",
+              },
+            }}>
             {subTitle}
           </Typography>
           <Typography gutterBottom variant='body1' component='p'>

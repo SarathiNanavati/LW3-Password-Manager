@@ -54,10 +54,10 @@ type WelcomeProps = {};
 const Welcome = (props: WelcomeProps) => {
   return (
     <>
-      <Grid container my={10} spacing={3}>
+      <Grid container mt={1} spacing={4} sx={{}}>
         {welcomeCardData.map((card) => {
           return (
-            <Grid key={card.id} item xs={12} sm={6} lg={4} xl={4}>
+            <Grid key={card.id} item xs={12} sm={6} md={6} lg={4} xl={4}>
               <WelcomeCard
                 iconUrl={card.iconUrl}
                 title={card.title}
