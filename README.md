@@ -10,7 +10,7 @@
 - Dynamically generated NFT's are used as access token for Application usage.
 - Currently Supporting Goerli and Polygon Mumbai. However more network supports can be configured.
 
-## Demo URL : [https://lw-3-password-manager.vercel.app/](https://lw-3-password-manager.vercel.app/)
+## Demo URL : [https://w3passwordmanager.vercel.app](https://w3passwordmanager.vercel.app)
 
 ## Project Flows and Supporting Screenshots
 
